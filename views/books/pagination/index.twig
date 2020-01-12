@@ -1,0 +1,65 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="container mb-5">
+        <div class="col-md-12">
+            <header class="jumbotron my-3">
+                <h1 class="display-3">Books pagination:</h1>
+                <form action="/books/pagination/set-limit" method="POST" class="form-inline mt-3">
+                    <div class="form-group">
+                        <label for="limit">Per page:</label>
+                        <input type="number" name="page_limit" min="1" class="form-control form-control-sm ml-2" id="limit"
+                               placeholder="Enter number"
+                               value="{% if cookieHas('books_page_limit') %}{{ cookieGet('books_page_limit') }}{% endif %}"
+                               required>
+                        <button type="submit" name="submit_page_limit" class="btn btn-sm btn-info ml-1">Set</button>
+                    </div>
+                </form>
+            </header>
+
+            {% if sessionHas('error') %}
+                <div class="alert {{ sessionGet('error', 'class') }}">{{ sessionFlash('error', 'message') }}</div>
+            {% endif %}
+
+            <nav class="my-2">
+                {% if pagination.totalPagesQty is not same as(1) %}
+                    <ul class="pagination pagination-sm">
+                        {% for page in 1..pagination.totalPagesQty %}
+                            <li class="page-item{% if pagination.isCurrentPage(page) %} active{% endif %}">
+                                <a class="page-link"
+                                   href="/books/pagination{% if page is same as(1) %}{% else %}?page={{ page }}{% endif %}">{{ page }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </nav>
+
+            {% if books is not empty %}
+                <p class="small text-muted">- amount {{ books|length }}</p>
+                <div class="row">
+                    {% for book in books %}
+                        <div class="col-md-3">
+                            <div class="card h-620">
+                                <img class="img-fluid min-h-320" src="{{ book['poster'] }}" alt="{{ book['name'] }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ book['name'] }}</h5>
+                                    {% if book['tags'] is not empty %}
+                                        <div>
+                                            {% for tag in book['tags'] %}
+                                                <span class="badge badge-pill badge-info"># {{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <p class="card-text my-1">ID: <b>{{ book['ISBN'] }}</b></p>
+                                    <p class="card-text">Price: <b>${{ book['price'] }}</b></p>
+                                </div>
+                                <a href="{{ book['url'] }}" class="btn btn-info">Check it out</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

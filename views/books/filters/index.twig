@@ -1,0 +1,105 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="container mb-5">
+        <div class="col-md-12">
+            <header class="jumbotron my-3">
+                <h1 class="display-3">Filter/sort books:</h1>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="filter_by_tags" data-toggle="tab"
+                           href="#nav-filter_by_tags"
+                           role="tab" aria-controls="nav-home" aria-selected="true">Filter by tags</a>
+                        <a class="nav-item nav-link" id="sort_by_name" data-toggle="tab" href="#nav-sort_by_name"
+                           role="tab"
+                           aria-controls="nav-contact" aria-selected="false">Sort by name</a>
+                        <a class="nav-item nav-link" id="sort_by_price" data-toggle="tab" href="#nav-sort_by_price"
+                           role="tab"
+                           aria-controls="nav-profile" aria-selected="false">Sort by price</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-filter_by_tags" role="tabpanel"
+                         aria-labelledby="filter_by_tags">
+                        {% if booksTags is not empty %}
+                            <form action="/books/filters/filter-by-tags" method="POST" class="mt-5 ml-5">
+                                {% for tag in booksTags %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="filter_tags[]" type="checkbox"
+                                               value="{{ tag }}"
+                                               id="tag{{ loop.index }}"
+                                               {% if cookieHas('books_filter') and isValueInFilter(tag, cookieGetUnserialized('books_filter', 'filters')) %}checked{% endif %}>
+                                        <label class="form-check-label"
+                                               for="tag{{ loop.index }}">{{ tag|capitalize }}</label>
+                                    </div>
+                                {% endfor %}
+                                <button type="submit" name="submit_filter_by_tags" class="btn btn-sm btn-info mt-2">
+                                    Filter
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="nav-sort_by_name" role="tabpanel" aria-labelledby="sort_by_name">
+                        <form action="/books/filters/filter-by-name" method="POST" class="mt-5 ml-5 form-inline">
+                            <div class="form-group">
+                                <select class="form-control form-control-sm" name="filter_name" id="name">
+                                    <option value="" selected disabled hidden>Choose order:</option>
+                                    <option value="ASC">ASC</option>
+                                    <option value="DESC">DESC</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="submit_filter_by_name" class="btn btn-sm btn-info ml-2">Sort
+                            </button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="nav-sort_by_price" role="tabpanel" aria-labelledby="sort_by_price">
+                        <form action="/books/filters/filter-by-price" method="POST" class="m-5 form-inline">
+                            <div class="form-group">
+                                <select class="form-control form-control-sm" name="filter_price" id="price">
+                                    <option value="" selected disabled hidden>Choose order:</option>
+                                    <option value="ASC">ASC</option>
+                                    <option value="DESC">DESC</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="submit_filter_by_price" class="btn btn-sm btn-info ml-2">Sort
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </header>
+
+            {% if sessionHas('success') %}
+                <div class="alert {{ sessionGet('success', 'class') }} mb-2">{{ sessionFlash('success', 'message') }}</div>
+            {% endif %}
+            {% if sessionHas('error') %}
+                <div class="alert {{ sessionGet('error', 'class') }} mb-2">{{ sessionFlash('error', 'message') }}</div>
+            {% endif %}
+
+            <p class="small text-muted">- amount {{ books|length }}</p>
+            <div class="row">
+                {% if books is not empty %}
+                    {% for book in books %}
+                        <div class="col-md-3">
+                            <div class="card h-620">
+                                <img class="img-fluid min-h-320" src="{{ book['poster'] }}" alt="{{ book['name'] }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ book['name'] }}</h5>
+                                    {% if book['tags'] is not empty %}
+                                        <div>
+                                            {% for tag in book['tags'] %}
+                                                <span class="badge badge-pill badge-info"># {{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <p class="card-text my-1">ID: <b>{{ book['ISBN'] }}</b></p>
+                                    <p class="card-text">Price: <b>${{ book['price'] }}</b></p>
+                                </div>
+                                <a href="{{ book['url'] }}" class="btn btn-info">Check it out</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

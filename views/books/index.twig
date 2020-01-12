@@ -1,0 +1,40 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="container mb-5">
+        <div class="col-md-12">
+            <header class="jumbotron my-3">
+                <h1 class="display-3">List of all books:</h1>
+            </header>
+
+            <div>
+                {% if books is not empty %}
+                    <p class="small text-muted">- amount {{ books|length }}</p>
+                    <div class="row">
+                        {% for book in books %}
+                            <div class="col-md-3">
+                                <div class="card h-620">
+                                    <img class="img-fluid min-h-320" src="{{ book['poster'] }}"
+                                         alt="{{ book['name'] }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ book['name'] }}</h5>
+                                        {% if book['tags'] is not empty %}
+                                            <div>
+                                                {% for tag in book['tags'] %}
+                                                    <span class="badge badge-pill badge-info"># {{ tag }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <p class="card-text my-1">ID: <b>{{ book['ISBN'] }}</b></p>
+                                        <p class="card-text">Price: <b>${{ book['price'] }}</b></p>
+                                    </div>
+                                    <a href="{{ book['url'] }}" class="btn btn-info">Check it out</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

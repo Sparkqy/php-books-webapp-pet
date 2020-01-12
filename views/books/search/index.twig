@@ -1,0 +1,61 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="container mb-5">
+        <div class="col-md-12">
+            <header class="jumbotron my-3">
+                <h1 class="display-3">Search a book:</h1>
+                <form action="/books/search" method="GET" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" name="search_query" class="form-control form-control-sm" id="search"
+                               placeholder="Enter search query"
+                               required>
+                        <button type="submit" class="btn btn-sm btn-info ml-1">Find</button>
+                    </div>
+                </form>
+            </header>
+
+            {% if sessionHas('error') %}
+                <div class="alert {{ sessionGet('error', 'class') }}">{{ sessionFlash('error', 'message') }}</div>
+            {% endif %}
+
+
+            {% if searchQuery is not empty %}
+                <div>
+                    <h4>Search results:</h4>
+                    <p class="small text-muted">- amount {{ searchResult|length }}</p>
+                    {% if searchResult is not empty %}
+                        <div class="row">
+                            {% for result in searchResult %}
+                                <div class="col-md-3">
+                                    <div class="card h-620">
+                                        <img class="img-fluid min-h-320" src="{{ result['poster'] }}"
+                                             alt="{{ result['name'] }}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ result['name'] }}</h5>
+                                            {% if result['tags'] is not empty %}
+                                                <div>
+                                                    {% for tag in result['tags'] %}
+                                                        <span class="badge badge-pill badge-info"># {{ tag }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <p class="card-text my-1">ID: <b>{{ result['ISBN'] }}</b></p>
+                                            <p class="card-text">Price: <b>${{ result['price'] }}</b></p>
+                                        </div>
+                                        <a href="{{ result['url'] }}" class="btn btn-info">Check it out</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            There are no books with name matching your request <br>
+                            Request: <i>{{ searchQuery }}</i>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

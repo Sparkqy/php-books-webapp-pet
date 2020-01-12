@@ -1,0 +1,19 @@
+version: "3.2"
+
+services:
+  webserver:
+    build:
+      context: ./docker/webserver
+    container_name: 'php-books-webserver'
+    restart: 'always'
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${DOCUMENT_ROOT-./}:/var/www/html/php-books
+      - ${PHP_INI-./docker/configs/php/php.ini}
+      - ${VHOSTS_DIR-./docker/configs/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./docker/logs/apache2}:/var/log/apache2
+    environment:
+      XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"

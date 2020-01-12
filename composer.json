@@ -1,0 +1,25 @@
+{
+  "name": "sparkqy/php-books",
+  "type": "project",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Illia Koliadenko",
+      "email": "illia_koliadenko@epam.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Src\\": "src/",
+      "App\\": "app/"
+    }
+  },
+  "require": {
+    "ext-pdo": "*",
+    "twig/twig": "^3.0",
+    "ext-json": "*",
+    "illuminate/database": "^6.10",
+    "robmorgan/phinx": "^0.11.4",
+    "fzaninotto/faker": "^1.9"
+  }
+}
