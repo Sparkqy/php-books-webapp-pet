@@ -1,6 +1,7 @@
 <?php
 
 use Phinx\Seed\AbstractSeed;
+use Src\Services\Auth\Auth;
 
 class UsersSeeder extends AbstractSeed
 {
@@ -23,7 +24,8 @@ class UsersSeeder extends AbstractSeed
                 'email' => $faker->email,
                 'first_name' => $faker->name,
                 'last_name' => $faker->lastName,
-                'password' => $faker->password,
+                'password' => Auth::encryptPassword('admin'),
+                'hash' => $faker->sha1,
                 'is_admin' => ($i == 1) ? true : false,
             ];
         }

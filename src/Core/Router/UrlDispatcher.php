@@ -65,7 +65,7 @@ class UrlDispatcher
 
                     $reflect = new \ReflectionClass($route[1]);
 
-                    if ($reflect->getParentClass()->name !== AbstractController::class) {
+                    if (!$reflect->isSubclassOf(AbstractController::class)) {
                         throw new InappropriateTypeException('Route controller must be instance of ' . AbstractController::class);
                     }
 

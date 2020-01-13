@@ -1,0 +1,28 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-12">
+            <header class="jumbotron my-3">
+                <h1 class="display-3">Log in:</h1>
+                <form action="/auth/login" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email address:</label>
+                        <input type="email" name="login_email" class="form-control form-control-sm" id="email"
+                                                          placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" name="login_password" class="form-control form-control-sm" id="password"
+                                                             placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-info">Log in</button>
+                </form>
+            </header>
+
+            {% if sessionHas('error') %}
+                <div class="alert {{ sessionGet('error', 'class') }}">{{ sessionFlash('error', 'message') }}</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

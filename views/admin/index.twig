@@ -1,0 +1,103 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<div class="container mb-5">
+    <div class="col-md-12">
+        <header class="jumbotron my-3">
+            <h1 class="display-3">Admin dashboard:</h1>
+        </header>
+
+        {% if sessionHas('success') %}
+            <div class="alert {{ sessionGet('success', 'class') }}">{{ sessionFlash('success', 'message') }}</div>
+        {% endif %}
+
+        <div>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="add_new_book" data-toggle="tab" href="#nav-add_new_book">
+                        Add new book
+                    </a>
+                    <a class="nav-item nav-link" id="edit_book" data-toggle="tab" href="#nav-edit_book">
+                        Edit book
+                    </a>
+                    <a class="nav-item nav-link" id="delete_book" data-toggle="tab" href="#nav-delete_book">
+                        Delete book
+                    </a>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-add_new_book">
+                    <form action="/admin/books/add" method="POST" class="m-3">
+                        <div class="form-group">
+                            <label for="isbn">ISBN:</label>
+                            <input type="number" name="isbn" class="form-control form-control-sm" id="isbn"
+                                   placeholder="Enter ISBN number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" name="name" class="form-control form-control-sm" id="name"
+                                   placeholder="Enter name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tags">
+                                Tags:
+                                <span class="small text-muted">(divide each tag with comma symbol)</span>
+                            </label>
+                            <input type="text" name="tags" class="form-control form-control-sm" id="tags"
+                                   placeholder="Enter tags" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="number" name="price" min="1" class="form-control form-control-sm" id="price"
+                                   placeholder="Enter price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="url">Url:</label>
+                            <input type="text" name="url" class="form-control form-control-sm" id="url"
+                                   placeholder="Enter url" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="poster_url">Poster url:</label>
+                            <input type="text" name="poster_url" class="form-control form-control-sm" id="poster_url"
+                                   placeholder="Enter poster url" required>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success">Add</button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="nav-edit_book">
+                    {% if books is not empty %}
+                        <ul class="list-group m-3">
+                            {% for book in books %}
+                                <li class="list-group-item">
+                                    <p class="m-0">
+                                        <b>ISBN:</b> {{ book['isbn'] }} |
+                                        <b>Name:</b> {{ book['name'] }} |
+                                        <b>Price:</b> {{ book['price'] }}
+                                        <a href="/admin/books/{{ book['id'] }}/edit"
+                                           class="btn btn-sm btn-info">Edit</a>
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="nav-delete_book">
+                    {% if books is not empty %}
+                        <ul class="list-group m-3">
+                            {% for book in books %}
+                                <li class="list-group-item">
+                                    <p class="m-0">
+                                        <b>ISBN:</b> {{ book['isbn'] }} |
+                                        <b>Name:</b> {{ book['name'] }} |
+                                        <b>Price:</b> {{ book['price'] }} |
+                                        <a href="/admin/books/{{ book['id'] }}/edit" class="btn btn-sm btn-danger">Delete</a>
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
