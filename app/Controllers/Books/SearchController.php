@@ -24,7 +24,7 @@ class SearchController extends AbstractController
         $books = Book::all();
 
         if (isset($_GET['search_query'])) {
-            list($searchQuery, $searchResult) = $this->search($books, $_GET['search_query']);
+            list($searchQuery, $searchResult) = $this->search($books->toArray(), $_GET['search_query']);
         }
 
         echo $this->twig->render('books/search/index.twig', [
@@ -51,8 +51,9 @@ class SearchController extends AbstractController
             ], '/books/search');
         }
 
-        $search = new Search($data);
-        $searchResult = $search->whereKeyPropertyLike('name', $searchQuery);
+        $searchResult = Book::where('name', $searchQuery)
+            ->orWhere('name', 'like', '%' . $searchQuery . '%')
+            ->get();
 
         return [$searchQuery, $searchResult];
     }

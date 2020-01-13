@@ -9,6 +9,7 @@ class UsersTableMigration extends Migration
     {
         $this->schema->create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('email')->unique()->index();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('password');

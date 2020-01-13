@@ -20,6 +20,7 @@ class UsersSeeder extends AbstractSeed
 
         for ($i = 1; $i <= 2; $i++) {
             $users[] = [
+                'email' => $faker->email,
                 'first_name' => $faker->name,
                 'last_name' => $faker->lastName,
                 'password' => $faker->password,

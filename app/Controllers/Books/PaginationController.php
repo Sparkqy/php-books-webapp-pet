@@ -23,7 +23,7 @@ class PaginationController extends AbstractController
     public function index()
     {
         $limit = $_COOKIE['books_page_limit'] ?? 10;
-        $pagination = new Pagination(Book::all(), '/books/pagination');
+        $pagination = new Pagination(Book::all()->toArray(), '/books/pagination');
         $books = $pagination->paginate($limit);
 
         echo $this->twig->render('books/pagination/index.twig', [

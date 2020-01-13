@@ -28,7 +28,7 @@ class FiltersController extends AbstractController
         parent::__construct();
 
         $this->books = Book::all();
-        $this->filter = new Filter($this->books);
+        $this->filter = new Filter($this->books->toArray());
     }
 
     /**
@@ -38,7 +38,7 @@ class FiltersController extends AbstractController
      */
     public function index()
     {
-        $booksTags = Book::getTags($this->books);
+        $booksTags = Book::allTags();
 
         if (Cookie::has('books_filter')) {
             $sortOptions = Cookie::getUnserialized('books_filter');

@@ -7,6 +7,12 @@ return [
         'index',
     ],
 
+    '@^/login$@' => [
+        'GET',
+        \App\Controllers\Auth\LoginController::class,
+        'index',
+    ],
+
     '@^/books/pagination$@' => [
         'GET',
         App\Controllers\Books\PaginationController::class,
