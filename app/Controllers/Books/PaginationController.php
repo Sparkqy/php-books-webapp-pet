@@ -15,15 +15,15 @@ use Twig\Error\SyntaxError;
 class PaginationController extends AbstractController
 {
     /**
-     * @throws InappropriateTypeException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws InappropriateTypeException
      */
-    public function index()
+    public function index(): void
     {
         $limit = $_COOKIE['books_page_limit'] ?? 10;
-        $pagination = new Pagination(Book::all()->toArray(), '/books/pagination');
+        $pagination = new Pagination(Book::with('tags')->get()->toArray(), '/books/pagination');
         $books = $pagination->paginate($limit);
 
         echo $this->twig->render('books/pagination/index.twig', [
@@ -32,7 +32,7 @@ class PaginationController extends AbstractController
         ]);
     }
 
-    public function setPageLimit()
+    public function setPageLimit(): void
     {
         if (isset($_POST['submit_page_limit'])) {
             $limit = $_POST['page_limit'] ?? null;

@@ -4,9 +4,9 @@ namespace App\Controllers\Books;
 
 use App\Controllers\AbstractController;
 use App\Models\Book;
+use App\Models\Tag;
 use Src\Helpers\Cookie;
 use Src\Helpers\Router;
-use Src\Services\Filter\Filter;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -14,45 +14,28 @@ use Twig\Error\SyntaxError;
 class FiltersController extends AbstractController
 {
     /**
-     * @var array
-     */
-    protected $books = [];
-
-    /**
-     * @var Filter
-     */
-    private $filter;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->books = Book::all();
-        $this->filter = new Filter($this->books->toArray());
-    }
-
-    /**
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
     public function index()
     {
-        $booksTags = Book::allTags();
+        $books = Book::with('tags')->get();
+        $tags = Tag::all();
 
         if (Cookie::has('books_filter')) {
-            $sortOptions = Cookie::getUnserialized('books_filter');
-            $this->filter->whereKeyHasValue($sortOptions['filter_by'], $sortOptions['filters']);
+            $options = Cookie::getUnserialized('books_filter');
+            $books = Book::filterByTags($options['filters'], $books);
         }
 
         if (Cookie::has('books_sort')) {
-            $sortOptions = Cookie::getUnserialized('books_sort');
-            $this->filter->sortByKey($sortOptions['sort_by'], $sortOptions['order']);
+            $options = Cookie::getUnserialized('books_sort');
+            $books = Book::sortBy($options['sort_by'], $options['order'], $books);
         }
 
         echo $this->twig->render('books/filters/index.twig', [
-            'books' => empty($this->filter->getOutputData()) ? $this->books : $this->filter->getOutputData(),
-            'booksTags' => $booksTags,
+            'books' => $books,
+            'tags' => $tags,
         ]);
     }
 
@@ -68,7 +51,7 @@ class FiltersController extends AbstractController
                 ], '/books/filters');
             }
 
-            Cookie::set('books_filter', ['filter_by' => 'tags', 'filters' => $filterTags]);
+            Cookie::set('books_filter', ['filters' => $filterTags]);
 
             Router::redirectWithFlash('success', [
                 'message' => 'Books was successfully filtered by tags',

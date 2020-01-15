@@ -6,32 +6,24 @@ migration_base_class: Src\Core\Database\Migration\Migration
 
 environments:
     default_migration_table: phinxlog
-    default_database: development
-#    production:
-#        adapter: mysql
-#        host: 127.0.0.1
-#        name: php-books
-#        user: root
-#        pass: ''
-#        port: 3306
-#        charset: utf8
+    default_database: docker
 
     development:
         adapter: mysql
         host: 127.0.0.1
         name: php-books
         user: root
-        pass: ''
+        pass: docker
         port: 3306
         charset: utf8
 
-#    testing:
-#        adapter: mysql
-#        host: 127.0.0.1
-#        name: php-books
-#        user: root
-#        pass: ''
-#        port: 3306
-#        charset: utf8
+    docker:
+        adapter: mysql
+        host: 172.25.0.1
+        name: php-books
+        user: root
+        pass: root
+        port: 3306
+        charset: utf8
 
 version_order: creation

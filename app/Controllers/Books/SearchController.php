@@ -6,7 +6,6 @@ use App\Controllers\AbstractController;
 use App\Models\Book;
 use Exception;
 use Src\Helpers\Router;
-use Src\Services\Search\Search;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -19,12 +18,19 @@ class SearchController extends AbstractController
      * @throws SyntaxError
      * @throws Exception
      */
-    public function index()
+    public function index(): void
     {
-        $books = Book::all();
+        $books = Book::with('tags')->get();
 
         if (isset($_GET['search_query'])) {
-            list($searchQuery, $searchResult) = $this->search($books->toArray(), $_GET['search_query']);
+            try {
+                list($searchQuery, $searchResult) = Book::search($_GET['search_query'], 'name');
+            } catch (\InvalidArgumentException $e) {
+                Router::redirectWithFlash('error', [
+                    'message' => 'Search query cannot be empty',
+                    'class' => 'alert-danger',
+                ], '/books/search');
+            }
         }
 
         echo $this->twig->render('books/search/index.twig', [
@@ -32,29 +38,5 @@ class SearchController extends AbstractController
             'searchQuery' => $searchQuery ?? null,
             'searchResult' => $searchResult ?? null,
         ]);
-    }
-
-    /**
-     * @param array $data
-     * @param string $searchQuery
-     * @return array
-     * @throws Exception
-     */
-    public function search(array $data, string $searchQuery): array
-    {
-        $searchQuery = trim(filter_var($searchQuery, FILTER_SANITIZE_STRING)) ?? null;
-
-        if (empty($searchQuery)) {
-            Router::redirectWithFlash('error', [
-                'message' => 'Search query cannot be empty',
-                'class' => 'alert-danger',
-            ], '/books/search');
-        }
-
-        $searchResult = Book::where('name', $searchQuery)
-            ->orWhere('name', 'like', '%' . $searchQuery . '%')
-            ->get();
-
-        return [$searchQuery, $searchResult];
     }
 }

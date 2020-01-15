@@ -44,6 +44,10 @@ class Pagination
      */
     public function __construct(array $data, string $baseUrl)
     {
+        if (empty($data)) {
+            throw new \InvalidArgumentException('Paginatable array cannot be empty');
+        }
+
         $this->paginatable = $data;
         $this->baseUrl = $baseUrl;
         $this->totalItemsQty = count($data);
@@ -54,7 +58,7 @@ class Pagination
      */
     public function getCurrentPage(): int
     {
-        $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
         if ($currentPage > $this->totalPagesQty) {
             Router::redirect($this->baseUrl . '?page=' . $this->totalPagesQty);
@@ -67,9 +71,11 @@ class Pagination
      * @param int $page
      * @return bool
      */
-    public function isCurrentPage(int $page): bool
+    public static function isCurrentPage(int $page): bool
     {
-        return ($page === $this->getCurrentPage());
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+        return ($page === $currentPage);
     }
 
     /**

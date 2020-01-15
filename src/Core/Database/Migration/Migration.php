@@ -15,24 +15,21 @@ class Migration extends AbstractMigration
     protected $schema;
 
     /**
-     * @var array
+     * Init Phinx in cmd
      */
-    private $connectionOptions = [];
-
     public function init()
     {
         $this->capsule = new Capsule();
-        $this->connectionOptions = require 'src/Configs/database.php';
 
         $this->capsule->addConnection([
             'driver' => 'mysql',
-            'host' => $this->connectionOptions['DB_HOST'],
-            'port' => $this->connectionOptions['DB_PORT'],
-            'database' => $this->connectionOptions['DB_NAME'],
-            'username' => $this->connectionOptions['DB_USER'],
-            'password' => $this->connectionOptions['DB_PASSWORD'],
+            'host' => '172.25.0.1',
+            'port' => 3306,
+            'database' => 'php-books',
+            'username' => 'root',
+            'password' => 'root',
             'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'collation' => 'utf8_general_ci',
         ]);
 
         $this->capsule->bootEloquent();
@@ -40,20 +37,22 @@ class Migration extends AbstractMigration
         $this->schema = $this->capsule->schema();
     }
 
+    /**
+     * Init Phinx without creating instance inside the Src\App
+     */
     public static function initStatically()
     {
         $capsule = new Capsule();
-        $connectionOptions = require $_SERVER['DOCUMENT_ROOT'] . '/../src/Configs/database.php';
 
         $capsule->addConnection([
             'driver' => 'mysql',
-            'host' => $connectionOptions['DB_HOST'],
-            'port' => $connectionOptions['DB_PORT'],
-            'database' => $connectionOptions['DB_NAME'],
-            'username' => $connectionOptions['DB_USER'],
-            'password' => $connectionOptions['DB_PASSWORD'],
+            'host' => '172.25.0.1',
+            'port' => 3306,
+            'database' => 'php-books',
+            'username' => 'root',
+            'password' => 'root',
             'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'collation' => 'utf8_general_ci',
         ]);
 
         $capsule->bootEloquent();

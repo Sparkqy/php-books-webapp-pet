@@ -4,14 +4,6 @@ use Phinx\Seed\AbstractSeed;
 
 class BooksSeeder extends AbstractSeed
 {
-    /**
-     * Run Method.
-     *
-     * Write your database seeder using this method.
-     *
-     * More information on writing seeders is available here:
-     * http://docs.phinx.org/en/latest/seeding.html
-     */
     public function run()
     {
         $books = [
@@ -21,7 +13,6 @@ class BooksSeeder extends AbstractSeed
                 'poster' => 'https://images-na.ssl-images-amazon.com/images/I/51aUTzDIxxL._SX379_BO1,204,203,200_.jpg',
                 'url' => 'https://www.amazon.com/Learning-PHP-MySQL-JavaScript-Javascript/dp/1491978910',
                 'price' => 31.15,
-                'tags' => json_encode(['php', 'mysql', 'jquery']),
             ],
             [
                 'ISBN' => '1789532019',
@@ -29,7 +20,6 @@ class BooksSeeder extends AbstractSeed
                 'poster' => 'https://images-na.ssl-images-amazon.com/images/I/51mIYYmtBQL._SX404_BO1,204,203,200_.jpg',
                 'url' => 'https://www.amazon.com/WordPress-Complete-beautiful-feature-rich-websites/dp/1789532019',
                 'price' => 40.50,
-                'tags' => json_encode(['php', 'wordpress']),
             ],
             [
                 'ISBN' => '1491936088',
@@ -37,7 +27,6 @@ class BooksSeeder extends AbstractSeed
                 'poster' => 'https://images-na.ssl-images-amazon.com/images/I/51bEpBADC%2BL._SX379_BO1,204,203,200_.jpg',
                 'url' => 'https://www.amazon.com/Laravel-Up-Running-Matt-Stauffer/dp/1491936088',
                 'price' => 80.21,
-                'tags' => json_encode(['laravel']),
             ],
             [
                 'ISBN' => '1785882813',

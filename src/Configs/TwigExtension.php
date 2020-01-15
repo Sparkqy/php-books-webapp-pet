@@ -5,6 +5,7 @@ namespace Src\Configs;
 use Src\Helpers\Cookie;
 use Src\Helpers\Session;
 use Src\Services\Filter\Filter;
+use Src\Services\Pagination\Pagination;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -41,6 +42,10 @@ class TwigExtension extends AbstractExtension
             new TwigFunction('isValueInFilter', function (string $value, array $filters) {
                return Filter::isValueInFilter($value, $filters);
             }),
+            // Pagination
+            new TwigFunction('isCurrentPaginationPage', function (int $page) {
+                return Pagination::isCurrentPage($page);
+            })
         ];
     }
 

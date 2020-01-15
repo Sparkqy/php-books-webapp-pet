@@ -15,9 +15,9 @@ class IndexController extends AbstractController
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function index()
+    public function index(): void
     {
-        $books = Book::all();
+        $books = Book::with('tags')->get();
 
         echo $this->twig->render('books/index.twig', [
             'books' => $books,

@@ -28,21 +28,21 @@
                             {% for result in searchResult %}
                                 <div class="col-md-3">
                                     <div class="card h-620">
-                                        <img class="img-fluid min-h-320" src="{{ result['poster'] }}"
-                                             alt="{{ result['name'] }}">
+                                        <img class="img-fluid min-h-320" src="{{ result.poster }}"
+                                             alt="{{ result.name }}">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ result['name'] }}</h5>
-                                            {% if result['tags'] is not empty %}
+                                            <h5 class="card-title">{{ result.name }}</h5>
+                                            {% if result.tags is not empty %}
                                                 <div>
-                                                    {% for tag in result['tags'] %}
-                                                        <span class="badge badge-pill badge-info"># {{ tag }}</span>
+                                                    {% for tag in result.tags %}
+                                                        <span class="badge badge-pill badge-info"># {{ tag.name }}</span>
                                                     {% endfor %}
                                                 </div>
                                             {% endif %}
-                                            <p class="card-text my-1">ID: <b>{{ result['ISBN'] }}</b></p>
-                                            <p class="card-text">Price: <b>${{ result['price'] }}</b></p>
+                                            <p class="card-text my-1">ID: <b>{{ result.ISBN }}</b></p>
+                                            <p class="card-text">Price: <b>${{ result.price }}</b></p>
                                         </div>
-                                        <a href="{{ result['url'] }}" class="btn btn-info">Check it out</a>
+                                        <a href="{{ result.url }}" class="btn btn-info">Check it out</a>
                                     </div>
                                 </div>
                             {% endfor %}

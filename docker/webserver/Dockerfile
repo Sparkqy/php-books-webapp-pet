@@ -1,37 +1,22 @@
-FROM php:7.3-apache-stretch
+FROM php:7.4-apache
 
-ARG DEBIAN_FRONTEND=noninteractive
+# Install necessary options
+RUN docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install mysqli \
+    && apt-get update && apt-get install -y git \
+    curl \
+    nano \
+    zip \
+    unzip \
+    && pecl channel-update pecl.php.net \
+    && pecl install xdebug-2.8.0 \
+    && docker-php-ext-enable xdebug
 
-# Update
-RUN apt-get -y update --fix-missing && \
-    apt-get upgrade -y && \
-    apt-get --no-install-recommends install -y apt-utils && \
-    rm -rf /var/lib/apt/lists/*
+# Install RewriteMod for .htaccess file
+RUN a2enmod rewrite
 
-RUN apt-get update && apt-get install -y git;
-RUN apt-get install zip unzip && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    pecl install xdebug-2.7.2 && \
-    docker-php-ext-enable xdebug;
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-#RUN pecl install xdebug-2.7.2 && \
-#    docker-php-ext-enable xdebug
-
-# Other PHP7 Extensions
-#RUN docker-php-ext-install pdo_mysql && \
-#    docker-php-ext-install pdo_sqlite && \
-#    docker-php-ext-install mysqli && \
-#    docker-php-ext-install curl && \
-#    docker-php-ext-install tokenizer && \
-#    docker-php-ext-install json && \
-#    docker-php-ext-install zip && \
-#    docker-php-ext-install -j$(nproc) intl && \
-#    docker-php-ext-install mbstring && \
-#    docker-php-ext-install gettext
-
-# Enable apache modules
-RUN a2enmod rewrite headers
-
-# Cleanup
-RUN rm -rf /usr/src/*
+# Install the working directory for the project
+WORKDIR /var/www/html/php-books-db

@@ -21,16 +21,16 @@
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-filter_by_tags" role="tabpanel"
                          aria-labelledby="filter_by_tags">
-                        {% if booksTags is not empty %}
+                        {% if tags is not empty %}
                             <form action="/books/filters/filter-by-tags" method="POST" class="mt-5 ml-5">
-                                {% for tag in booksTags %}
+                                {% for tag in tags %}
                                     <div class="form-check">
                                         <input class="form-check-input" name="filter_tags[]" type="checkbox"
-                                               value="{{ tag }}"
+                                               value="{{ tag.id }}"
                                                id="tag{{ loop.index }}"
-                                               {% if cookieHas('books_filter') and isValueInFilter(tag, cookieGetUnserialized('books_filter', 'filters')) %}checked{% endif %}>
+                                               {% if cookieHas('books_filter') and isValueInFilter(tag.id, cookieGetUnserialized('books_filter', 'filters')) %}checked{% endif %}>
                                         <label class="form-check-label"
-                                               for="tag{{ loop.index }}">{{ tag|capitalize }}</label>
+                                               for="tag{{ loop.index }}">{{ tag.name|capitalize }}</label>
                                     </div>
                                 {% endfor %}
                                 <button type="submit" name="submit_filter_by_tags" class="btn btn-sm btn-info mt-2">
@@ -53,7 +53,7 @@
                         </form>
                     </div>
                     <div class="tab-pane fade" id="nav-sort_by_price" role="tabpanel" aria-labelledby="sort_by_price">
-                        <form action="/books/filters/filter-by-price" method="POST" class="m-5 form-inline">
+                        <form action="/books/filters/filter-by-price" method="POST" class="mt-5 ml-5 form-inline">
                             <div class="form-group">
                                 <select class="form-control form-control-sm" name="filter_price" id="price">
                                     <option value="" selected disabled hidden>Choose order:</option>
@@ -81,20 +81,20 @@
                     {% for book in books %}
                         <div class="col-md-3">
                             <div class="card h-620">
-                                <img class="img-fluid min-h-320" src="{{ book['poster'] }}" alt="{{ book['name'] }}">
+                                <img class="img-fluid min-h-320" src="{{ book.poster }}" alt="{{ book.name }}">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ book['name'] }}</h5>
-                                    {% if book['tags'] is not empty %}
+                                    <h5 class="card-title">{{ book.name }}</h5>
+                                    {% if book.tags is not empty %}
                                         <div>
-                                            {% for tag in book['tags'] %}
-                                                <span class="badge badge-pill badge-info"># {{ tag }}</span>
+                                            {% for tag in book.tags %}
+                                                <span class="badge badge-pill badge-info"># {{ tag.name }}</span>
                                             {% endfor %}
                                         </div>
                                     {% endif %}
-                                    <p class="card-text my-1">ID: <b>{{ book['ISBN'] }}</b></p>
-                                    <p class="card-text">Price: <b>${{ book['price'] }}</b></p>
+                                    <p class="card-text my-1">ID: <b>{{ book.isbn }}</b></p>
+                                    <p class="card-text">Price: <b>${{ book.price }}</b></p>
                                 </div>
-                                <a href="{{ book['url'] }}" class="btn btn-info">Check it out</a>
+                                <a href="{{ book.url }}" class="btn btn-info">Check it out</a>
                             </div>
                         </div>
                     {% endfor %}

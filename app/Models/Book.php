@@ -3,39 +3,102 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 class Book extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['isbn', 'name', 'url', 'poster', 'price', 'tags'];
+    protected $fillable = ['isbn', 'name', 'url', 'poster', 'price'];
+
+    public $timestamps = false;
 
     /**
-     * @var array
+     * @return BelongsToMany
      */
-    protected $casts = ['tags' => 'array'];
-
-    /**
-     * @return array|null
-     */
-    public static function allTags(): ?array
+    public function tags()
     {
-        $books = self::where('tags', '!=', null)->get();
+        return $this->belongsToMany(Tag::class);
+    }
 
-        if (empty($books)) {
-            return null;
+    /**
+     * @param string $searchQuery
+     * @param string $searchColumn
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public static function search(string $searchQuery, string $searchColumn): array
+    {
+        if (empty($searchQuery)) {
+            throw new InvalidArgumentException('Search query cannot be empty');
         }
 
-        $bookTags = $books->pluck('tags')->toArray();
-        $allTags = [];
+        try {
+            $searchResult = Book::where($searchColumn, $searchQuery)
+                ->orWhere('name', 'like', '%' . $searchQuery . '%')
+                ->get();
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
 
-        foreach ($bookTags as $tags) {
-            foreach ($tags as $tag) {
-                $allTags[] = $tag;
+        return [$searchQuery, $searchResult];
+    }
+
+    /**
+     * @param array $filters
+     * @param Collection|null $collection
+     * @return Collection
+     */
+    public static function filterByTags(array $filters, Collection $collection = null): Collection
+    {
+        if ($collection !== null) {
+            $filtered = collect([]);
+
+            foreach ($collection as $collectionItem) {
+                if ($collectionItem instanceof self) {
+                    /** @var Tag $tag */
+                    foreach ($collectionItem->tags as $tag) {
+                        if (in_array($tag->id, $filters)) {
+                            $filtered->push($collectionItem);
+                            continue 2;
+                        }
+                    }
+                }
             }
+
+            return $filtered;
         }
 
-        return array_unique($allTags);
+        return self::whereHas('tags', function (Builder $query) use ($filters) {
+            $query->whereIn('id', $filters);
+        })->get();
+    }
+
+    /**
+     * @param string $sortableColumn
+     * @param string $order
+     * @param Collection|null $collection
+     * @return array
+     */
+    public static function sortBy(string $sortableColumn, string $order, Collection $collection = null)
+    {
+        if ($collection !== null) {
+            if ($order === 'ASC') {
+                $sorted = $collection->sortBy($sortableColumn);
+            } elseif ($order === 'DESC') {
+                $sorted = $collection->sortByDesc($sortableColumn);
+            } else {
+                throw new InvalidArgumentException('Order string must equal to ASC or DESC');
+            }
+
+            return $sorted->values()->all();
+        }
+
+        return self::orderBy($sortableColumn, $order)->get();
     }
 }

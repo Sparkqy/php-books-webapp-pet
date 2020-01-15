@@ -14,7 +14,6 @@ class BooksTableMigration extends Migration
             $table->string('url');
             $table->string('poster');
             $table->float('price');
-            $table->json('tags')->nullable();
         });
     }
 

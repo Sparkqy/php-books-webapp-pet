@@ -1,19 +1,46 @@
-version: "3.2"
+version: "3.4"
 
 services:
+  # Apache + PHP
   webserver:
     build:
       context: ./docker/webserver
-    container_name: 'php-books-webserver'
+    container_name: 'php-books-db_webserver'
     restart: 'always'
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ${DOCUMENT_ROOT-./}:/var/www/html/php-books
-      - ${PHP_INI-./docker/configs/php/php.ini}
+      - ${DOCUMENT_ROOT-./}:/var/www/html/php-books-db
+      - ${PHP_INI-./docker/configs/php/php.ini}:/usr/local/etc/php/php.ini
       - ${VHOSTS_DIR-./docker/configs/vhosts}:/etc/apache2/sites-enabled
       - ${LOG_DIR-./docker/logs/apache2}:/var/log/apache2
     environment:
       XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
       PHP_IDE_CONFIG: "serverName=Docker"
+    links:
+      - db
+  # DB MySQL
+  db:
+    image: mysql:5.6.40
+    ports:
+      - "3306:3306"
+    container_name: 'php-books-db_db'
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: 'php-books-db_phpmyadmin'
+    links:
+      - db
+    ports:
+      - "8765:80"
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
