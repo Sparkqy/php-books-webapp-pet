@@ -21,7 +21,7 @@ class LogoutController extends AbstractController
     {
         parent::__construct();
 
-        if (!$this->auth->isAuthorized()) {
+        if ($this->user === null) {
             throw new FileNotFoundException('Page not found');
         }
     }

@@ -10,14 +10,14 @@ abstract class AdminAbstractController extends AbstractController
     /**
      * @var string
      */
-    private $redirectLogin = '/login';
+    private $redirectToLogin = '/login';
 
     public function __construct()
     {
         parent::__construct();
 
-        if (!$this->auth->isAuthorized()) {
-            Router::redirect($this->redirectLogin);
+        if ($this->user === null) {
+            Router::redirect($this->redirectToLogin);
         }
     }
 }

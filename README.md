@@ -18,5 +18,5 @@ Bonus tasks:
 4. `composer install`
 5. `vendor/bin/phinx migrate` (if migration fails because of missing database: 1. `docker-compose exec db bash` 2. create database 'php-books')
 6. `vendor/bin/phinx seed:run`
-7. to log in into the dashboard use email and password from two randomly generated users in users table. If you want to access 'admin dashboard' use credentials of user with 'is_admin' set to 1  
+7. to log in into the dashboard use email and password ('admin' for both users) from two randomly generated users in users table. If you want to access 'admin dashboard' use credentials of user with 'is_admin' set to 1  
 

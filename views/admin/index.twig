@@ -11,6 +11,10 @@
             <div class="alert {{ sessionGet('success', 'class') }}">{{ sessionFlash('success', 'message') }}</div>
         {% endif %}
 
+        {% if sessionHas('error') %}
+            <div class="alert {{ sessionGet('error', 'class') }}">{{ sessionFlash('error', 'message') }}</div>
+        {% endif %}
+
         <div>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -25,9 +29,10 @@
                     </a>
                 </div>
             </nav>
+
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-add_new_book">
-                    <form action="/admin/books/add" method="POST" class="m-3">
+                    <form action="/admin/books/store" method="POST" class="m-3">
                         <div class="form-group">
                             <label for="isbn">ISBN:</label>
                             <input type="number" name="isbn" class="form-control form-control-sm" id="isbn"
@@ -39,12 +44,13 @@
                                    placeholder="Enter name" required>
                         </div>
                         <div class="form-group">
-                            <label for="tags">
-                                Tags:
-                                <span class="small text-muted">(divide each tag with comma symbol)</span>
-                            </label>
-                            <input type="text" name="tags" class="form-control form-control-sm" id="tags"
-                                   placeholder="Enter tags" required>
+                            <label for="tags">Tags:</label>
+                            <p class="small text-muted">Select one or more by Ctrl + Left click</p>
+                            <select multiple name="tags[]" class="form-control form-control-sm" id="tags">
+                                {% for tag in tags %}
+                                    <option value="{{ tag.id }}">{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="price">Price:</label>
@@ -57,25 +63,26 @@
                                    placeholder="Enter url" required>
                         </div>
                         <div class="form-group">
-                            <label for="poster_url">Poster url:</label>
-                            <input type="text" name="poster_url" class="form-control form-control-sm" id="poster_url"
+                            <label for="poster">Poster url:</label>
+                            <input type="text" name="poster" class="form-control form-control-sm" id="poster"
                                    placeholder="Enter poster url" required>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-success">Add</button>
+                        <button type="submit" name="submit_book_add" class="btn btn-sm btn-success">Add</button>
                     </form>
                 </div>
+
                 <div class="tab-pane fade" id="nav-edit_book">
                     {% if books is not empty %}
                         <ul class="list-group m-3">
                             {% for book in books %}
                                 <li class="list-group-item">
                                     <p class="m-0">
-                                        <b>ISBN:</b> {{ book['isbn'] }} |
-                                        <b>Name:</b> {{ book['name'] }} |
-                                        <b>Price:</b> {{ book['price'] }}
-                                        <a href="/admin/books/{{ book['id'] }}/edit"
-                                           class="btn btn-sm btn-info">Edit</a>
+                                        <b>ISBN:</b> {{ book.isbn }} |
+                                        <b>Name:</b> {{ book.name }} |
+                                        <b>Price:</b> {{ book.price }}
                                     </p>
+                                    <a href="/admin/books/{{ book.id }}/edit"
+                                       class="btn btn-sm btn-info">Edit</a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -87,11 +94,13 @@
                             {% for book in books %}
                                 <li class="list-group-item">
                                     <p class="m-0">
-                                        <b>ISBN:</b> {{ book['isbn'] }} |
-                                        <b>Name:</b> {{ book['name'] }} |
-                                        <b>Price:</b> {{ book['price'] }} |
-                                        <a href="/admin/books/{{ book['id'] }}/edit" class="btn btn-sm btn-danger">Delete</a>
+                                        <b>ISBN:</b> {{ book.isbn }} |
+                                        <b>Name:</b> {{ book.name }} |
+                                        <b>Price:</b> {{ book.price }}
                                     </p>
+                                    <form action="/admin/books/{{ book.id }}/delete" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
                                 </li>
                             {% endfor %}
                         </ul>

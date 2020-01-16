@@ -17,7 +17,7 @@ class UsersSeeder extends AbstractSeed
                 'first_name' => $faker->name,
                 'last_name' => $faker->lastName,
                 'password' => Auth::encryptPassword('admin'),
-                'hash' => $faker->sha1,
+                'auth_token' => $faker->sha1,
                 'is_admin' => ($i == 1) ? true : false,
             ];
         }

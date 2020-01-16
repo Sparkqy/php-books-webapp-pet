@@ -1,0 +1,54 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="container mb-5">
+        <div class="col-md-12">
+            <header class="jumbotron my-3">
+                <h1 class="display-4">Edit {{ book.name }}:</h1>
+            </header>
+
+            {% if sessionHas('success') %}
+                <div class="alert {{ sessionGet('success', 'class') }}">{{ sessionFlash('success', 'message') }}</div>
+            {% endif %}
+
+            <form action="/admin/books/{{ book.id }}/update" method="POST" class="m-3">
+                <div class="form-group">
+                    <label for="isbn">ISBN:</label>
+                    <input type="number" name="isbn" value="{{ book.isbn }}" class="form-control form-control-sm" id="isbn"
+                           placeholder="Enter ISBN number" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" value="{{ book.name }}" class="form-control form-control-sm" id="name"
+                           placeholder="Enter name" required>
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags:</label>
+                    <p class="small text-muted">Select one or more by Ctrl + Left click</p>
+                    <select multiple name="tags" class="form-control form-control-sm" id="tags">
+{#                        TODO mark tag as selected if it is attached to book #}
+                        {% for tag in tags %}
+                            <option value="{{ tag.id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" name="price" value="{{ book.price }}" min="1" class="form-control form-control-sm" id="price"
+                           placeholder="Enter price" required>
+                </div>
+                <div class="form-group">
+                    <label for="url">Url:</label>
+                    <input type="text" name="url" value="{{ book.url }}" class="form-control form-control-sm" id="url"
+                           placeholder="Enter url" required>
+                </div>
+                <div class="form-group">
+                    <label for="poster">Poster url:</label>
+                    <input type="text" name="poster" value="{{ book.poster }}" class="form-control form-control-sm" id="poster"
+                           placeholder="Enter poster url" required>
+                </div>
+                <button type="submit" name="submit_book_edit" class="btn btn-sm btn-info">Edit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

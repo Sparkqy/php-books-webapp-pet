@@ -8,8 +8,7 @@ services:
     container_name: 'php-books-db_webserver'
     restart: 'always'
     ports:
-      - "80:80"
-      - "443:443"
+      - "8001:80"
     volumes:
       - ${DOCUMENT_ROOT-./}:/var/www/html/php-books-db
       - ${PHP_INI-./docker/configs/php/php.ini}:/usr/local/etc/php/php.ini

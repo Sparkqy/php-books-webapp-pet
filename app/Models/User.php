@@ -10,7 +10,7 @@ class User extends Model
     /**
      * @var array
      */
-    protected $fillable = ['email', 'first_name', 'last_name', 'password', 'hash', 'is_admin'];
+    protected $fillable = ['email', 'first_name', 'last_name', 'password', 'auth_token', 'is_admin'];
 
     /**
      * @var bool
@@ -35,7 +35,7 @@ class User extends Model
      */
     public function refreshHash(): self
     {
-        $this->hash = sha1(random_bytes(100)) . sha1(random_bytes(100));
+        $this->auth_token = sha1(random_bytes(100));
         $this->save();
 
         return $this;

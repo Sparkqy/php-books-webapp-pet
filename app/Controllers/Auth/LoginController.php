@@ -13,6 +13,14 @@ use Twig\Error\SyntaxError;
 class LoginController extends AbstractController
 {
     /**
+     * @var array
+     */
+    private $validationRules = [
+        'login_email' => 'email',
+        'login_password' => 'required',
+    ];
+
+    /**
      * @var string
      */
     protected $redirectIfFailed = '/login';
@@ -20,19 +28,14 @@ class LoginController extends AbstractController
     /**
      * @var string
      */
-    protected $redirectIfAuthAsAdmin = '/admin';
-
-    /**
-     * @var string
-     */
-    protected $redirectIfAuthAsUser = '/dashboard';
+    protected $redirectIfSuccess = '/admin';
 
     public function __construct()
     {
         parent::__construct();
 
-        if ($this->auth->isAuthorized()) {
-            Router::redirect('/admin');
+        if ($this->user !== null) {
+            Router::redirect($this->redirectIfSuccess);
         }
     }
 
@@ -41,7 +44,7 @@ class LoginController extends AbstractController
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function index()
+    public function index(): void
     {
         echo $this->twig->render('auth/login.twig');
     }
@@ -51,12 +54,19 @@ class LoginController extends AbstractController
      */
     public function login(): void
     {
-        list($email, $password) = $this->validateLoginInput();
+        $validated = $this->validator->validate($_POST, $this->validationRules)->get();
+
+        if (!$validated) {
+            Router::redirectWithFlash('error', [
+                'message' => $this->validator->echoErrors(),
+                'class' => 'alert-danger',
+            ], $this->redirectIfFailed);
+        }
 
         /** @var User $user */
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $validated['login_email'])->first();
 
-        if (empty($user) || !password_verify($password, $user->password)) {
+        if (empty($user) || !password_verify($validated['login_password'], $user->password) || !$user->isAdmin()) {
             Router::redirectWithFlash('error', [
                 'message' => 'Invalid email or password',
                 'class' => 'alert-danger',
@@ -64,48 +74,11 @@ class LoginController extends AbstractController
         }
 
         $user->refreshHash();
-        $this->auth->authorize($user->hash);
-
-        if ($user->isAdmin()) {
-            Router::redirectWithFlash('success', [
-                'message' => 'You are successfully authorized as ' . $user->full_name . '. Role: Admin',
-                'class' => 'alert-success',
-            ], $this->redirectIfAuthAsAdmin);
-        }
+        $this->auth->authorize($user, $user->auth_token);
 
         Router::redirectWithFlash('success', [
-            'message' => 'You are successfully authorized as ' . $user->full_name,
+            'message' => 'You are successfully authorized as ' . $user->full_name . '. Role: Admin',
             'class' => 'alert-success',
-        ], $this->redirectIfAuthAsUser);
-    }
-
-    public function logout()
-    {
-        // TODO logout
-    }
-
-    /**
-     * @return array
-     */
-    private function validateLoginInput(): array
-    {
-        $email = isset($_POST['login_email']) ? trim($_POST['login_email']) : null;
-        $password = isset($_POST['login_password']) ? htmlspecialchars(trim($_POST['login_password'])) : null;
-
-        if (empty($email) || empty($password)) {
-            Router::redirectWithFlash('error', [
-                'message' => 'Invalid email format',
-                'class' => 'alert-danger',
-            ], $this->redirectIfFailed);
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Router::redirectWithFlash('error', [
-                'message' => 'Invalid email format',
-                'class' => 'alert-danger',
-            ], $this->redirectIfFailed);
-        }
-
-        return [$email, $password];
+        ], $this->redirectIfSuccess);
     }
 }

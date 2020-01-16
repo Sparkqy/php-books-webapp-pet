@@ -24,7 +24,7 @@
                         Select task:
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% if cookieHas('is_authorized') and cookieGet('is_authorized') is same as('1') %}
+                        {% if isAuthorized() %}
                             <a class="dropdown-item" href="/admin">Admin dashboard</a>
                             <div class="dropdown-divider"></div>
                         {% endif %}
@@ -35,7 +35,7 @@
                     </div>
                 </li>
 
-                {% if cookieHas('is_authorized') and cookieGet('is_authorized') is same as('1') %}
+                {% if isAuthorized() %}
                     <li class="nav-item">
                         <a href="/logout" class="btn btn-outline-info">Log Out</a>
                     </li>

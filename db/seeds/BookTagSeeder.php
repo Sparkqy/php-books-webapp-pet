@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Book;
+use App\Models\Tag;
 use Phinx\Seed\AbstractSeed;
 
 class BookTagSeeder extends AbstractSeed

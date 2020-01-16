@@ -7,7 +7,7 @@ use App\Models\Book;
 use Src\Exceptions\InappropriateTypeException;
 use Src\Helpers\Cookie;
 use Src\Helpers\Router;
-use Src\Services\Pagination\Pagination;
+use Src\Services\Pagination\Paginator;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -23,7 +23,7 @@ class PaginationController extends AbstractController
     public function index(): void
     {
         $limit = $_COOKIE['books_page_limit'] ?? 10;
-        $pagination = new Pagination(Book::with('tags')->get()->toArray(), '/books/pagination');
+        $pagination = new Paginator(Book::with('tags')->get()->toArray(), '/books/pagination');
         $books = $pagination->paginate($limit);
 
         echo $this->twig->render('books/pagination/index.twig', [

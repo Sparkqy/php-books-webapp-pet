@@ -2,31 +2,59 @@
 
 namespace Src\Services\Auth;
 
+use App\Models\User;
 use Src\Helpers\Cookie;
 
 class Auth implements AuthInterface
 {
     /**
-     * @param string $authHash
+     * @return User|null
+     */
+    public static function getUserByAuthToken(): ?User
+    {
+        $authToken = Cookie::get('auth_token');
+
+        if ($authToken === null) {
+            return null;
+        }
+
+        list($id, $token) = explode(':', $authToken, 2);
+        $user = User::find($id);
+
+        if ($user === null) {
+            return null;
+        }
+
+        if ($user->auth_token !== $token) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     * @param string $authToken
      * @return bool
      */
-    public function authorize(string $authHash): bool
+    public function authorize(User $user, string $authToken): bool
     {
-        if (empty($authHash)) {
-            Cookie::set('auth_hash', null);
+        if (empty($authToken)) {
+            Cookie::set('auth_token', null);
+            Cookie::set('is_authorized', false);
 
             return false;
         }
 
+        $this->setAuthToken($user->id, $authToken);
         Cookie::set('is_authorized', true);
-        Cookie::set('auth_hash', $authHash);
 
         return true;
     }
 
     public function unAuthorize(): void
     {
-        Cookie::unset('auth_hash');
+        Cookie::unset('auth_token');
         Cookie::unset('is_authorized');
     }
 
@@ -42,20 +70,25 @@ class Auth implements AuthInterface
     /**
      * @return bool|null
      */
-    public function isAuthorized(): ?bool
+    public static function isAuthorized(): ?bool
     {
         if (!Cookie::has('is_authorized')) {
             return false;
         }
 
-        return Cookie::get('is_authorized');
+        return ((bool)Cookie::get('is_authorized') === true) ? true : false;
     }
 
     /**
-     * @return string|null
+     * @param int $userId
+     * @param string $authToken
+     * @return $this
      */
-    public function getAuthHash(): ?string
+    private function setAuthToken(int $userId, string $authToken): self
     {
-        return Cookie::get('auth_hash');
+        $token = $userId . ':' . $authToken;
+        Cookie::set('auth_token', $token);
+
+        return $this;
     }
 }

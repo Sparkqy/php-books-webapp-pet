@@ -8,6 +8,7 @@ class BookTagTable extends Migration
     public function up()
     {
         $this->schema->create('book_tag', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('book_id');
             $table->unsignedBigInteger('tag_id');
 
