@@ -19,7 +19,7 @@ environments:
 
     docker:
         adapter: mysql
-        host: 172.25.0.1
+        host: db
         name: php-books
         user: root
         pass: root

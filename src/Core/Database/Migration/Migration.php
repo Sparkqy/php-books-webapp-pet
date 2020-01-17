@@ -23,7 +23,7 @@ class Migration extends AbstractMigration
 
         $this->capsule->addConnection([
             'driver' => 'mysql',
-            'host' => '172.25.0.1',
+            'host' => 'db',
             'port' => 3306,
             'database' => 'php-books',
             'username' => 'root',
@@ -46,7 +46,7 @@ class Migration extends AbstractMigration
 
         $capsule->addConnection([
             'driver' => 'mysql',
-            'host' => '172.25.0.1',
+            'host' => 'db',
             'port' => 3306,
             'database' => 'php-books',
             'username' => 'root',
