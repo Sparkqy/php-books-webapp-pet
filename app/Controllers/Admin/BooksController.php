@@ -6,6 +6,9 @@ use App\Models\Book;
 use App\Models\Tag;
 use Exception;
 use Src\Helpers\Router;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class BooksController extends AdminAbstractController
 {
@@ -43,6 +46,12 @@ class BooksController extends AdminAbstractController
         }
     }
 
+    /**
+     * @param int $id
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function edit(int $id): void
     {
         $book = Book::findOrFail($id);
@@ -54,6 +63,9 @@ class BooksController extends AdminAbstractController
         ]);
     }
 
+    /**
+     * @param int $id
+     */
     public function update(int $id): void
     {
         if (isset($_POST['submit_book_edit'])) {

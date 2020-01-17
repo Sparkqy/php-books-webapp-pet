@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Controllers\Books;
+namespace App\Controllers;
 
-use App\Controllers\AbstractController;
 use App\Models\Book;
 use Exception;
 use Src\Helpers\Router;

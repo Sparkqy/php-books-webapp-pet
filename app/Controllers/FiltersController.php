@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Controllers\Books;
+namespace App\Controllers;
 
-use App\Controllers\AbstractController;
 use App\Models\Book;
 use App\Models\Tag;
 use Src\Helpers\Cookie;
