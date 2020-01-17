@@ -2,6 +2,9 @@
 
 namespace Src\Services\Validation;
 
+use Src\Exceptions\FileNotFoundException;
+use Src\Helpers\Config;
+
 class Validator
 {
     /**
@@ -12,20 +15,12 @@ class Validator
     /**
      * @var array
      */
-    protected $ruleMethodLinksRegistry = [
-        'required' => 'validateRequired',
-        'email' => 'validateEmail',
-        'numeric' => 'validateNumeric',
-    ];
+    protected $ruleMethodLinksRegistry = [];
 
     /**
      * @var array
      */
-    protected $ruleErrorMessages = [
-        'required' => 'cannot be empty',
-        'email' => 'must be in valid email format',
-        'numeric' => 'field must be numeric',
-    ];
+    protected $ruleErrorMessages = [];
 
     /**
      * @var array
@@ -36,10 +31,16 @@ class Validator
      * @var array
      */
     protected $validated = [];
-    
+
+    /**
+     * Validator constructor.
+     * @throws FileNotFoundException
+     */
     public function __construct()
     {
         $this->validationMethodRegistry = new ValidationMethodsRegistry();
+        $this->ruleMethodLinksRegistry = Config::get('rule_method_links_registry');
+        $this->ruleErrorMessages = Config::get('rule_error_messages');
     }
 
     /**

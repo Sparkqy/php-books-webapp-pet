@@ -41,16 +41,17 @@ class FiltersController extends AbstractController
     public function filterByTags(): void
     {
         if (isset($_POST['submit_filter_by_tags'])) {
-            $filterTags = (array)$_POST['filter_tags'];
+            $validator = $this->validator->validate($_POST, ['filter_tags' => 'required']);
 
-            if (empty($filterTags)) {
+            if ($validator->hasErrors()) {
                 Router::redirectWithFlash('error', [
-                    'message' => 'Choose at least one tag to filter books',
+                    'message' => $validator->echoErrors(),
                     'class' => 'alert-danger',
                 ], '/books/filters');
             }
 
-            Cookie::set('books_filter', ['filters' => $filterTags]);
+            $validData = $validator->get();
+            Cookie::set('books_filter', ['filters' => $validData['filter_tags']]);
 
             Router::redirectWithFlash('success', [
                 'message' => 'Books was successfully filtered by tags',

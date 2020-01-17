@@ -14,6 +14,11 @@ use Twig\Error\SyntaxError;
 class PaginationController extends AbstractController
 {
     /**
+     * @var array
+     */
+    private $validationRules = ['page_limit' => 'numeric'];
+
+    /**
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
@@ -34,16 +39,17 @@ class PaginationController extends AbstractController
     public function setPageLimit(): void
     {
         if (isset($_POST['submit_page_limit'])) {
-            $limit = $_POST['page_limit'] ?? null;
+            $validator = $this->validator->validate($_POST, $this->validationRules);
 
-            if (empty($limit) || !is_numeric($limit) || $limit < 0) {
+            if ($validator->hasErrors()) {
                 Router::redirectWithFlash('error', [
-                    'message' => 'Page limit value must be numeric and greater than zero',
+                    'message' => $validator->echoErrors(),
                     'class' => 'alert-danger',
                 ], '/books/pagination');
             }
 
-            Cookie::set('books_page_limit', $limit);
+            $validData = $validator->get();
+            Cookie::set('books_page_limit', $validData['page_limit']);
             Router::redirect('/books/pagination');
         }
     }

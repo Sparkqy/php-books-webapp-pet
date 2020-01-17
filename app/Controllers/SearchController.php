@@ -12,6 +12,11 @@ use Twig\Error\SyntaxError;
 class SearchController extends AbstractController
 {
     /**
+     * @var array
+     */
+    private $validationRules = ['search_query' => 'required'];
+
+    /**
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
@@ -22,14 +27,17 @@ class SearchController extends AbstractController
         $books = Book::with('tags')->get();
 
         if (isset($_GET['search_query'])) {
-            try {
-                list($searchQuery, $searchResult) = Book::search($_GET['search_query'], 'name');
-            } catch (\InvalidArgumentException $e) {
+            $validator = $this->validator->validate($_GET, $this->validationRules);
+
+            if ($validator->hasErrors()) {
                 Router::redirectWithFlash('error', [
-                    'message' => 'Search query cannot be empty',
+                    'message' => $validator->echoErrors(),
                     'class' => 'alert-danger',
                 ], '/books/search');
             }
+
+            $validData = $validator->get();
+            list($searchQuery, $searchResult) = Book::search($validData['search_query'], 'name');
         }
 
         echo $this->twig->render('books/search/index.twig', [

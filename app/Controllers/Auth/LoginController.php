@@ -54,19 +54,20 @@ class LoginController extends AbstractController
      */
     public function login(): void
     {
-        $validated = $this->validator->validate($_POST, $this->validationRules)->get();
+        $validator = $this->validator->validate($_POST, $this->validationRules);
 
-        if (!$validated) {
+        if ($validator->hasErrors()) {
             Router::redirectWithFlash('error', [
-                'message' => $this->validator->echoErrors(),
+                'message' => $validator->echoErrors(),
                 'class' => 'alert-danger',
             ], $this->redirectIfFailed);
         }
 
+        $validData = $validator->get();
         /** @var User $user */
-        $user = User::where('email', $validated['login_email'])->first();
+        $user = User::where('email', $validData['login_email'])->first();
 
-        if (empty($user) || !password_verify($validated['login_password'], $user->password) || !$user->isAdmin()) {
+        if (empty($user) || !password_verify($validData['login_password'], $user->password) || !$user->isAdmin()) {
             Router::redirectWithFlash('error', [
                 'message' => 'Invalid email or password',
                 'class' => 'alert-danger',

@@ -38,18 +38,11 @@ class Book extends Model
      * @param string $searchQuery
      * @param string $searchColumn
      * @return array
-     * @throws InvalidArgumentException
      */
     public static function search(string $searchQuery, string $searchColumn): array
     {
-        if (empty($searchQuery)) {
-            throw new InvalidArgumentException('Search query cannot be empty');
-        }
-
         try {
-            $searchResult = Book::where($searchColumn, $searchQuery)
-                ->orWhere('name', 'like', '%' . $searchQuery . '%')
-                ->get();
+            $searchResult = Book::where($searchColumn, 'like', '%' . $searchQuery . '%')->get();
         } catch (\PDOException $e) {
             echo $e->getMessage();
             exit();
