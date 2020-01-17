@@ -2,8 +2,6 @@
 
 namespace Src\Services\Search;
 
-use Exception;
-
 class Search
 {
     protected $searchable;

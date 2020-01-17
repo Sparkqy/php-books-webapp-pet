@@ -5,15 +5,23 @@ namespace Src\Services\Validation;
 class Validator
 {
     /**
+     * @var ValidationMethodsRegistry
+     */
+    protected $validationMethodRegistry;
+
+    /**
      * @var array
      */
-    private $ruleMethodLinksRegistry = [
+    protected $ruleMethodLinksRegistry = [
         'required' => 'validateRequired',
         'email' => 'validateEmail',
         'numeric' => 'validateNumeric',
     ];
 
-    private $ruleErrorMessages = [
+    /**
+     * @var array
+     */
+    protected $ruleErrorMessages = [
         'required' => 'cannot be empty',
         'email' => 'must be in valid email format',
         'numeric' => 'field must be numeric',
@@ -28,6 +36,11 @@ class Validator
      * @var array
      */
     protected $validated = [];
+    
+    public function __construct()
+    {
+        $this->validationMethodRegistry = new ValidationMethodsRegistry();
+    }
 
     /**
      * @param string $rule
@@ -41,13 +54,12 @@ class Validator
         }
 
         $validationMethod = $this->ruleMethodLinksRegistry[$rule];
-        $validationMethodRegistry = new ValidationMethodsRegistry();
 
-        if (!method_exists($validationMethodRegistry, $validationMethod) || !is_callable([$validationMethodRegistry, $validationMethod])) {
+        if (!method_exists($this->validationMethodRegistry, $validationMethod) || !is_callable([$this->validationMethodRegistry, $validationMethod])) {
             throw new \InvalidArgumentException('Validation method does not exist or not callable');
         }
 
-        return $validationMethodRegistry->$validationMethod($value);
+        return $this->validationMethodRegistry->$validationMethod($value);
     }
 
     /**
@@ -65,7 +77,10 @@ class Validator
                 if ($isValid) {
                     $this->validated[$inputName] = $inputValue;
                 } else {
-                    array_push($this->errors, ['message' => ucfirst($inputName) . ' ' . $this->ruleErrorMessages[$rule] . '. ']);
+                    $this->errors[] = [
+                        'input_name' => $inputName,
+                        'message' => $this->setErrorMessage($inputName, $this->ruleErrorMessages[$rule])
+                    ];
                 }
             } else {
                 $this->validated[$inputName] = $inputValue;
@@ -73,6 +88,16 @@ class Validator
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $inputName
+     * @param string $error
+     * @return string
+     */
+    private function setErrorMessage(string $inputName, string $error): string
+    {
+        return ucfirst($inputName) . ' ' . $error . '. ';
     }
 
     /**

@@ -26,6 +26,15 @@ class Book extends Model
     }
 
     /**
+     * @param int $tagId
+     * @return bool
+     */
+    public function hasTag(int $tagId): bool
+    {
+        return $this->tags->contains('id', '=', $tagId);
+    }
+
+    /**
      * @param string $searchQuery
      * @param string $searchColumn
      * @return array

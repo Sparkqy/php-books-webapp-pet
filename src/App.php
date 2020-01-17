@@ -46,7 +46,7 @@ class App
         return self::$twigLoader;
     }
 
-    public function run()
+    public function run(): void
     {
         try {
             $dispatchedRoute = $this->router->dispatch();
