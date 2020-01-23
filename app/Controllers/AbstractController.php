@@ -3,12 +3,11 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use Src\App;
-use Src\Configs\TwigExtension;
+use Src\Core\DI\DI;
+use src\Exceptions\DIContainerException;
 use Src\Services\Auth\Auth;
 use Src\Services\Validation\Validator;
 use Twig\Environment;
-use Twig\Extension\DebugExtension;
 
 abstract class AbstractController
 {
@@ -32,15 +31,16 @@ abstract class AbstractController
      */
     protected $validator;
 
-    public function __construct()
+    /**
+     * AbstractController constructor.
+     * @param DI $di
+     * @throws DIContainerException
+     */
+    public function __construct(DI $di)
     {
-        // Init Twig
-        $this->twig = new Environment(App::getTwigLoader(), ['debug' => true]);
-        $this->twig->addExtension(new DebugExtension());
-        $this->twig->addExtension(new TwigExtension());
-
-        $this->auth = new Auth();
+        $this->twig = $di->get('twig');
+        $this->auth = $di->get('auth');
         $this->user = Auth::getUserByAuthToken();
-        $this->validator = new Validator();
+        $this->validator = $di->get('validator');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controllers\Auth;
 use App\Controllers\AbstractController;
 use App\Models\User;
 use Exception;
+use Src\Core\DI\DI;
 use Src\Helpers\Router;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -30,9 +31,9 @@ class LoginController extends AbstractController
      */
     protected $redirectIfSuccess = '/admin';
 
-    public function __construct()
+    public function __construct(DI $di)
     {
-        parent::__construct();
+        parent::__construct($di);
 
         if ($this->user !== null) {
             Router::redirect($this->redirectIfSuccess);

@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\AbstractController;
+use Src\Core\DI\DI;
 use Src\Helpers\Router;
 
 abstract class AdminAbstractController extends AbstractController
@@ -12,9 +13,9 @@ abstract class AdminAbstractController extends AbstractController
      */
     private $redirectToLogin = '/login';
 
-    public function __construct()
+    public function __construct(DI $di)
     {
-        parent::__construct();
+        parent::__construct($di);
 
         if ($this->user === null) {
             Router::redirect($this->redirectToLogin);

@@ -1,7 +1,26 @@
 <?php
 
+use Src\App;
+use Src\Core\DI\DI;
+use Src\Core\Providers\AbstractServiceProvider;
+use Src\Exceptions\DIContainerException;
+
 session_start();
 
-$app = new Src\App();
+try {
+    $di = new DI();
+    $serviceProviders = require ROOT . '/../src/Configs/service_providers.php';
 
-$app->run();
+    foreach ($serviceProviders as $serviceProvider) {
+        /** @var AbstractServiceProvider $service */
+        $service = new $serviceProvider($di);
+        $service->init();
+    }
+
+    $app = new App($di);
+    $app->run();
+} catch (DIContainerException $e) {
+    http_response_code(404);
+    echo $e->getMessage();
+    exit();
+}
