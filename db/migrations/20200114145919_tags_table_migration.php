@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use Src\Core\Database\Migration\Migration;
+use Src\Core\Database\Eloquent\Eloquent;
 
-class TagsTableMigration extends Migration
+class TagsTableMigration extends Eloquent
 {
     public function up()
     {

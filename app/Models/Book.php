@@ -87,7 +87,7 @@ class Book extends Model
      * @param Collection|null $collection
      * @return array
      */
-    public static function sortBy(string $sortableColumn, string $order, Collection $collection = null)
+    public static function sortBy(string $sortableColumn, string $order, Collection $collection = null): array
     {
         if ($collection !== null) {
             if ($order === 'ASC') {

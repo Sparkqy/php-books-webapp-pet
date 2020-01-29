@@ -10,27 +10,27 @@ class Validator
     /**
      * @var ValidationMethodsRegistry
      */
-    protected $validationMethodRegistry;
+    protected ValidationMethodsRegistry $validationMethodRegistry;
 
     /**
      * @var array
      */
-    protected $ruleMethodLinksRegistry = [];
+    protected array $ruleMethodLinksRegistry = [];
 
     /**
      * @var array
      */
-    protected $ruleErrorMessages = [];
+    protected array $ruleErrorMessages = [];
 
     /**
      * @var array
      */
-    protected $errors = [];
+    protected array $errors = [];
 
     /**
      * @var array
      */
-    protected $validated = [];
+    protected array $validated = [];
 
     /**
      * Validator constructor.

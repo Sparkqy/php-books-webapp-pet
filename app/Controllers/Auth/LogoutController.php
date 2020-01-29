@@ -13,7 +13,7 @@ class LogoutController extends AbstractController
     /**
      * @var string
      */
-    protected $redirectAfterLogout = '/';
+    protected string $redirectAfterLogout = '/';
 
     /**
      * LogoutController constructor.

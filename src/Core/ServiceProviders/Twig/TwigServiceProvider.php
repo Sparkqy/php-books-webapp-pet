@@ -1,9 +1,9 @@
 <?php
 
-namespace Src\Core\Providers\Twig;
+namespace Src\Core\ServiceProviders\Twig;
 
 use Src\Configs\TwigExtension;
-use Src\Core\Providers\AbstractServiceProvider;
+use Src\Core\ServiceProviders\AbstractServiceProvider;
 use src\Exceptions\DIContainerException;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;

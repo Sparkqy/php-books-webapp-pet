@@ -2,7 +2,7 @@
 
 use Src\App;
 use Src\Core\DI\DI;
-use Src\Core\Providers\AbstractServiceProvider;
+use Src\Core\ServiceProviders\AbstractServiceProvider;
 use Src\Exceptions\DIContainerException;
 
 session_start();

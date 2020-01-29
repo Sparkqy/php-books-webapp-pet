@@ -9,7 +9,7 @@ class DI
     /**
      * @var array
      */
-    private $container = [];
+    private array $container = [];
 
     /**
      * @param string $key

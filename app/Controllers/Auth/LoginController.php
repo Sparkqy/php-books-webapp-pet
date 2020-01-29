@@ -16,7 +16,7 @@ class LoginController extends AbstractController
     /**
      * @var array
      */
-    private $validationRules = [
+    private array $validationRules = [
         'login_email' => 'email',
         'login_password' => 'required',
     ];
@@ -24,12 +24,12 @@ class LoginController extends AbstractController
     /**
      * @var string
      */
-    protected $redirectIfFailed = '/login';
+    protected string $redirectIfFailed = '/login';
 
     /**
      * @var string
      */
-    protected $redirectIfSuccess = '/admin';
+    protected string $redirectIfSuccess = '/admin';
 
     public function __construct(DI $di)
     {

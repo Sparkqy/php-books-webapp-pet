@@ -2,55 +2,83 @@
 
 namespace Src\Services\Pagination;
 
+use Src\Exceptions\FileNotFoundException;
 use Src\Exceptions\InappropriateTypeException;
 use Src\Helpers\Router;
+use Src\Services\Validation\Validator;
 
 class Paginator
 {
     /**
      * @var string
      */
-    protected $baseUrl;
+    protected string $baseUrl;
 
     /**
      * @var array
      */
-    protected $paginatable;
+    protected array $paginatable;
 
     /**
      * @var int
      */
-    protected $totalItemsQty;
+    protected int $totalItemsQty;
 
     /**
      * @var int
      */
-    protected $limit;
+    protected int $limit;
 
     /**
      * @var int
      */
-    protected $totalPagesQty;
+    protected int $totalPagesQty;
 
     /**
      * @var int
      */
-    protected $currentPage;
+    protected int $currentPage;
+
+    /**
+     * @var Validator
+     */
+    protected Validator $validator;
 
     /**
      * Paginator constructor.
      * @param array $data
      * @param string $baseUrl
+     * @throws FileNotFoundException
      */
     public function __construct(array $data, string $baseUrl)
     {
         if (empty($data)) {
-            throw new \InvalidArgumentException('Paginatable array cannot be empty');
+            throw new \InvalidArgumentException('Array being paginated cannot be empty');
         }
 
+        $this->validator = new Validator();
         $this->paginatable = $data;
         $this->baseUrl = $baseUrl;
         $this->totalItemsQty = count($data);
+    }
+
+    /**
+     * @param array $get
+     * @return bool|int
+     */
+    private function validateCurrentPage(array $get)
+    {
+        if (empty($get['page'])) {
+           return 1;
+        }
+
+        $validator = $this->validator->validate($get, ['page' => 'numeric']);
+
+        if ($validator->hasErrors()) {
+            return false;
+        }
+
+        return (int)$validator->get()['page'];
     }
 
     /**
@@ -58,9 +86,9 @@ class Paginator
      */
     public function getCurrentPage(): int
     {
-        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $currentPage = $this->validateCurrentPage($_GET);
 
-        if ($currentPage > $this->totalPagesQty) {
+        if ($currentPage === false || $currentPage > $this->totalPagesQty) {
             Router::redirect($this->baseUrl . '?page=' . $this->totalPagesQty);
         }
 

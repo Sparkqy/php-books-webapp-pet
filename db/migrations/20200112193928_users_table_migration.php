@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use Src\Core\Database\Migration\Migration;
+use Src\Core\Database\Eloquent\Eloquent;
 
-class UsersTableMigration extends Migration
+class UsersTableMigration extends Eloquent
 {
     public function up()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Core\Providers;
+namespace Src\Core\ServiceProviders;
 
 use Src\Core\DI\DI;
 
@@ -9,7 +9,7 @@ abstract class AbstractServiceProvider
     /**
      * @var DI
      */
-    protected $di;
+    protected DI $di;
 
     /**
      * AbstractServiceProvider constructor.
@@ -20,5 +20,8 @@ abstract class AbstractServiceProvider
         $this->di = $di;
     }
 
+    /**
+     * @return void
+     */
     abstract public function init(): void;
 }

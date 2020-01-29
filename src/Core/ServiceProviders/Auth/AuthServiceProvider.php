@@ -1,8 +1,8 @@
 <?php
 
-namespace Src\Core\Providers\Auth;
+namespace Src\Core\ServiceProviders\Auth;
 
-use Src\Core\Providers\AbstractServiceProvider;
+use Src\Core\ServiceProviders\AbstractServiceProvider;
 use src\Exceptions\DIContainerException;
 use Src\Services\Auth\Auth;
 

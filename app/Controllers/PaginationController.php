@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Book;
+use Src\Exceptions\FileNotFoundException;
 use Src\Exceptions\InappropriateTypeException;
 use Src\Helpers\Cookie;
 use Src\Helpers\Router;
@@ -16,13 +17,14 @@ class PaginationController extends AbstractController
     /**
      * @var array
      */
-    private $validationRules = ['page_limit' => 'numeric'];
+    private array $validationRules = ['page_limit' => 'numeric'];
 
     /**
+     * @throws InappropriateTypeException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws InappropriateTypeException
+     * @throws FileNotFoundException
      */
     public function index(): void
     {

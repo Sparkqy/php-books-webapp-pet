@@ -1,8 +1,8 @@
 <?php
 
-namespace Src\Core\Providers\Validator;
+namespace Src\Core\ServiceProviders\Validator;
 
-use Src\Core\Providers\AbstractServiceProvider;
+use Src\Core\ServiceProviders\AbstractServiceProvider;
 use src\Exceptions\DIContainerException;
 use Src\Exceptions\FileNotFoundException;
 use Src\Services\Validation\Validator;

@@ -1,18 +1,18 @@
 <?php
 
-namespace Src\Core\Database\Migration;
+namespace Src\Core\Database\Eloquent;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Builder;
 use Phinx\Migration\AbstractMigration;
 
-class Migration extends AbstractMigration
+class Eloquent extends AbstractMigration
 {
     /** @var Capsule $capsule */
-    protected $capsule;
+    protected Capsule $capsule;
 
     /** @var Builder $capsule */
-    protected $schema;
+    protected Builder $schema;
 
     /**
      * Init Phinx in cmd

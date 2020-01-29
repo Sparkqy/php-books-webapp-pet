@@ -1,8 +1,8 @@
 <?php
 
 return [
-    \Src\Core\Providers\Router\RouterProvider::class,
-    \Src\Core\Providers\Twig\TwigServiceProvider::class,
-    \Src\Core\Providers\Auth\AuthServiceProvider::class,
-    \Src\Core\Providers\Validator\ValidatorServiceProvider::class,
+    \Src\Core\ServiceProviders\Router\RouterProvider::class,
+    \Src\Core\ServiceProviders\Twig\TwigServiceProvider::class,
+    \Src\Core\ServiceProviders\Auth\AuthServiceProvider::class,
+    \Src\Core\ServiceProviders\Validator\ValidatorServiceProvider::class,
 ];

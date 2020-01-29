@@ -14,22 +14,22 @@ abstract class AbstractController
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * @var Auth
      */
-    protected $auth;
+    protected Auth $auth;
 
     /**
      * @var User|null
      */
-    protected $user;
+    protected ?User $user;
 
     /**
      * @var Validator
      */
-    protected $validator;
+    protected Validator $validator;
 
     /**
      * AbstractController constructor.

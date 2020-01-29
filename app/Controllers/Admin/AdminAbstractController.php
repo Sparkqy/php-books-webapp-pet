@@ -11,7 +11,7 @@ abstract class AdminAbstractController extends AbstractController
     /**
      * @var string
      */
-    private $redirectToLogin = '/login';
+    private string $redirectToLogin = '/login';
 
     public function __construct(DI $di)
     {

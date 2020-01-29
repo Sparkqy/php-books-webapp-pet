@@ -3,9 +3,9 @@
 namespace Src;
 
 use http\Exception\InvalidArgumentException;
-use Src\Core\Database\Migration\Migration;
+use Src\Core\Database\Eloquent\Eloquent;
 use Src\Core\DI\DI;
-use Src\Core\Providers\Router\RouterProvider;
+use Src\Core\ServiceProviders\Router\RouterProvider;
 use Src\Core\Router\Router;
 use Src\Exceptions\DIContainerException;
 
@@ -30,7 +30,7 @@ class App
     {
         $this->di = $di;
         $this->router = $this->di->get(RouterProvider::SERVICE_NAME);
-        Migration::initStatically();
+        Eloquent::initStatically();
     }
 
     public function run(): void

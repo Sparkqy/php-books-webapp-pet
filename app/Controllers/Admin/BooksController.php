@@ -15,7 +15,7 @@ class BooksController extends AdminAbstractController
     /**
      * @var array
      */
-    private $validationRules = [
+    private array $validationRules = [
         'isbn' => 'numeric',
         'name' => 'required',
         'price' => 'numeric',
@@ -36,6 +36,7 @@ class BooksController extends AdminAbstractController
             }
 
             $validData = $validator->get();
+            /** @var Book $book */
             $book = Book::create($validData);
             $book->tags()->attach($validData['tags']);
 
@@ -69,6 +70,7 @@ class BooksController extends AdminAbstractController
     public function update(int $id): void
     {
         if (isset($_POST['submit_book_edit'])) {
+            /** @var Book $book */
             $book = Book::findOrFail($id);
 
             $validator = $this->validator->validate($_POST, $this->validationRules);

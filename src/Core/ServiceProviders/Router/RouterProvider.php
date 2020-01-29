@@ -1,8 +1,8 @@
 <?php
 
-namespace Src\Core\Providers\Router;
+namespace Src\Core\ServiceProviders\Router;
 
-use Src\Core\Providers\AbstractServiceProvider;
+use Src\Core\ServiceProviders\AbstractServiceProvider;
 use Src\Core\Router\Router;
 use src\Exceptions\DIContainerException;
 
