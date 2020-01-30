@@ -4,7 +4,10 @@ namespace Src\Services\Search;
 
 class Search
 {
-    protected $searchable;
+    /**
+     * @var array
+     */
+    protected array $searchable;
 
     /**
      * Search constructor.

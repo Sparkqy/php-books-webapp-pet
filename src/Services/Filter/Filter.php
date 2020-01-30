@@ -9,12 +9,20 @@ class Filter
     /**
      * @var array
      */
-    protected $filterable;
+    protected array $filterable = [];
 
     /**
      * @var array
      */
-    protected $filtered = [];
+    protected array $filtered = [];
+
+    /**
+     * @var array
+     */
+    protected array $orders = [
+        'asc' => 'ASC',
+        'desc' => 'DESC',
+    ];
 
     /**
      * Filter constructor.
@@ -71,13 +79,13 @@ class Filter
     {
         $filterable = $this->getFilterable();
 
-        if ($order === 'ASC') {
+        if ($order === $this->orders['asc']) {
             usort($filterable, function (array $item1, array $item2) use ($filterableKey, $order) {
                 if (array_key_exists($filterableKey, $item1) && array_key_exists($filterableKey, $item2)) {
                     return $item1[$filterableKey] <=> $item2[$filterableKey];
                 }
             });
-        } elseif ($order === 'DESC') {
+        } elseif ($order === $this->orders['desc']) {
             usort($filterable, function (array $item1, array $item2) use ($filterableKey, $order) {
                 if (array_key_exists($filterableKey, $item1) && array_key_exists($filterableKey, $item2)) {
                     return $item2[$filterableKey] <=> $item1[$filterableKey];

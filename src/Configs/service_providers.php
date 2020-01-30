@@ -5,4 +5,5 @@ return [
     \Src\Core\ServiceProviders\Twig\TwigServiceProvider::class,
     \Src\Core\ServiceProviders\Auth\AuthServiceProvider::class,
     \Src\Core\ServiceProviders\Validator\ValidatorServiceProvider::class,
+    \Src\Core\ServiceProviders\Model\ModelLoader::class,
 ];

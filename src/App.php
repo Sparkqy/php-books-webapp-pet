@@ -14,12 +14,12 @@ class App
     /**
      * @var DI
      */
-    private $di;
+    private DI $di;
 
     /**
      * @var Router
      */
-    protected $router;
+    protected Router $router;
 
     /**
      * App constructor.

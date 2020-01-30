@@ -15,22 +15,22 @@ class UrlDispatcher
     /**
      * @var string
      */
-    protected $url;
+    protected string $url;
 
     /**
      * @var string
      */
-    protected $requestMethod;
+    protected string $requestMethod;
 
     /**
      * @var array
      */
-    protected $routes = [];
+    protected array $routes = [];
 
     /**
      * @var null|array
      */
-    protected $matchedRoute = null;
+    protected ?array $matchedRoute = null;
 
     public function __construct()
     {

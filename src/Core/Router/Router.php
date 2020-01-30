@@ -13,7 +13,7 @@ class Router
     /**
      * @var UrlDispatcher
      */
-    protected $urlDispatcher;
+    protected UrlDispatcher $urlDispatcher;
 
     public function __construct()
     {

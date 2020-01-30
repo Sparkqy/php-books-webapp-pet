@@ -4,7 +4,10 @@ namespace App\Controllers;
 
 use App\Models\Book;
 use Exception;
+use Src\Core\DI\DI;
+use src\Exceptions\DIContainerException;
 use Src\Helpers\Router;
+use stdClass;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -12,9 +15,25 @@ use Twig\Error\SyntaxError;
 class SearchController extends AbstractController
 {
     /**
+     * @var stdClass
+     */
+    private stdClass $bookModel;
+
+    /**
      * @var array
      */
-    private $validationRules = ['search_query' => 'required'];
+    private array $validationRules = ['search_query' => 'required'];
+
+    /**
+     * SearchController constructor.
+     * @param DI $di
+     * @throws DIContainerException
+     */
+    public function __construct(DI $di)
+    {
+        parent::__construct($di);
+        $this->bookModel = $this->modelLoader->loadModel('book');
+    }
 
     /**
      * @throws LoaderError
@@ -37,7 +56,7 @@ class SearchController extends AbstractController
             }
 
             $validData = $validator->get();
-            list($searchQuery, $searchResult) = Book::search($validData['search_query'], 'name');
+            [$searchQuery, $searchResult] = $this->bookModel->repository->search($validData['search_query'], 'name');
         }
 
         echo $this->twig->render('books/search/index.twig', [

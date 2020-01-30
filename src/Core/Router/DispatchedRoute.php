@@ -9,17 +9,17 @@ class DispatchedRoute
     /**
      * @var string
      */
-    protected $controller;
+    protected string $controller;
 
     /**
      * @var string
      */
-    protected $action;
+    protected string $action;
 
     /**
      * @var array
      */
-    protected $params;
+    protected array $params = [];
 
     /**
      * DispatchedRoute constructor.

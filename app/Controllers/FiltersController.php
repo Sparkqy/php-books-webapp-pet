@@ -4,14 +4,41 @@ namespace App\Controllers;
 
 use App\Models\Book;
 use App\Models\Tag;
+use Src\Core\DI\DI;
+use src\Exceptions\DIContainerException;
 use Src\Helpers\Cookie;
 use Src\Helpers\Router;
+use stdClass;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
 class FiltersController extends AbstractController
 {
+    /**
+     * @var stdClass
+     */
+    private stdClass $bookModel;
+
+    /**
+     * @var array
+     */
+    private array $sortOrders = [
+        'asc' => 'ASC',
+        'desc' => 'DESC',
+    ];
+
+    /**
+     * FiltersController constructor.
+     * @param DI $di
+     * @throws DIContainerException
+     */
+    public function __construct(DI $di)
+    {
+        parent::__construct($di);
+        $this->bookModel = $this->modelLoader->loadModel('book');
+    }
+
     /**
      * @throws LoaderError
      * @throws RuntimeError
@@ -24,12 +51,12 @@ class FiltersController extends AbstractController
 
         if (Cookie::has('books_filter')) {
             $options = Cookie::getUnserialized('books_filter');
-            $books = Book::filterByTags($options['filters'], $books);
+            $books = $this->bookModel->repository->filterByTags($options['filters'], $books);
         }
 
         if (Cookie::has('books_sort')) {
             $options = Cookie::getUnserialized('books_sort');
-            $books = Book::sortBy($options['sort_by'], $options['order'], $books);
+            $books = $this->bookModel->repository->sortBy($options['sort_by'], $options['order'], $books);
         }
 
         echo $this->twig->render('books/filters/index.twig', [
@@ -65,7 +92,7 @@ class FiltersController extends AbstractController
         if (isset($_POST['submit_filter_by_price'])) {
             $order = (string)$_POST['filter_price'];
 
-            if ($order !== 'ASC' && $order !== 'DESC') {
+            if ($order !== $this->sortOrders['asc'] && $order !== $this->sortOrders['desc']) {
                 Router::redirectWithFlash('error', [
                     'message' => 'Sort order can be ASC or DESC only',
                     'class' => 'alert-danger',
@@ -86,7 +113,7 @@ class FiltersController extends AbstractController
         if (isset($_POST['submit_filter_by_name'])) {
             $order = (string)$_POST['filter_name'];
 
-            if ($order !== 'ASC' && $order !== 'DESC') {
+            if ($order !== $this->sortOrders['asc'] && $order !== $this->sortOrders['desc']) {
                 Router::redirectWithFlash('error', [
                     'message' => 'Sort order can be ASC or DESC only',
                     'class' => 'alert-danger',
